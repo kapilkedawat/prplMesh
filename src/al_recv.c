@@ -1367,6 +1367,12 @@ uint8_t process1905Cmdu(struct CMDU *c, uint8_t *receiving_interface_addr, uint8
                 //
                 for (i = 0; i < wsc_list.length; i++)
                 {
+                    uint8_t j;
+                    /* tear down all bss for this radio */
+                    for (j = 0; j < radio->configured_bsses.length; j++)
+                    {
+                        interfaceTearDown(&radio->configured_bsses.data[j]->i);
+                    }
                     wscProcessM2(radio, wsc_list.data[i].m2, wsc_list.data[i].m2_size);
                 }
                 wscInfoFree(radio);
@@ -1459,8 +1465,8 @@ uint8_t process1905Cmdu(struct CMDU *c, uint8_t *receiving_interface_addr, uint8
         case CMDU_TYPE_AP_AUTOCONFIGURATION_RENEW:
         {
             PLATFORM_PRINTF_DEBUG_INFO("<-- CMDU_TYPE_AP_AUTOCONFIGURATION_RENEW (%s)\n", DMmacToInterfaceName(receiving_interface_addr));
-            // TODO
 
+            // TODO
             break;
         }
         case CMDU_TYPE_PUSH_BUTTON_EVENT_NOTIFICATION:
